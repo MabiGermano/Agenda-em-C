@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <locale.h>
 #include <ctype.h>
-#define MAXIMO 1000
+
 struct Scontato{
 	char nome[50];
 	char numero[20];
@@ -13,16 +13,14 @@ struct Scontato{
 
 void novoContato(int numero, contato registros[], int tamanho);
 int excluirContato(void);
-void editarContato(contato registros[]);
+void editarContato(contato registros[], int tamanho);
 void listarContatos(contato registros[], int tamanho);
 int sair(contato registros[], int tamanho);
 void inicio(contato registros[], int tamanho);
 int menu(contato registros[], int tamanho);
-void tornarDisponiveis(contato registros[], int tamanho);
-int verificarItemVazio(contato registros[], int tamanho);
 void mensagem(char mensagem[], int tamanho);
 int tamanhoString(char mensagem[]);
-void buscaString(contato registros[], char nomeBusca[], int tamanho);
+void buscaString(contato registros[], char nomeBusca[], int tamanhoString, int tamanho);
 int main(){
     setlocale(LC_ALL, "Portuguese");
 	
@@ -94,7 +92,7 @@ int menu(contato registros[], int tamanho){
             excluirContato();
             break;
         case 3:
-            editarContato(registros);
+            editarContato(registros, tamanho);
             break;
         case 4:
             listarContatos(registros, tamanho);
@@ -143,17 +141,86 @@ int excluirContato(void){
 	return 0;
 }
 
-void editarContato(contato registros[]){
+void editarContato(contato registros[], int tamanho){
 	char mensagemInicio[] = "**********   Editar Contato   **********";
+	char divisao[] = "\n ---------------------------------------------------------------------\n";  
 	int tamanhoMensagem = tamanhoString(mensagemInicio);
-	mensagem(mensagemInicio, tamanhoMensagem);	 
 	char nomeBusca[50];
-	int tamanho;
-	printf("Digite pelo menos parte do nome do contato: ");
-	scanf("%49s", nomeBusca);
-	tamanho = tamanhoString(nomeBusca);
-	buscaString(registros, nomeBusca, tamanho);
-	//menu(registros);
+	int tamanhoBusca, codigoContato, verificar;
+	char mensagemSucesso[] = "Alteração Concluída Com Sucesso!";
+	mensagem(mensagemInicio, tamanhoMensagem);	 
+	
+	printf("Digite pelo menos parte do nome do contato que deseja alterar: ");
+	scanf("%s", nomeBusca);
+	tamanhoBusca = tamanhoString(nomeBusca);
+	buscaString(registros, nomeBusca, tamanhoBusca, tamanho);
+	printf("%s", divisao);
+	printf("Digite o CÓDIGO referente a o contato que deseja alterar: ");
+	scanf("%d", &codigoContato);
+	system("cls");
+	
+			printf("%s", divisao);
+			printf(" %d. ", codigoContato);
+			printf("Nome: %s | ", registros[codigoContato].nome);
+			printf("Numero: %s | ", registros[codigoContato].numero);
+			printf("Email: %s ", registros[codigoContato].email);
+			printf("%s", divisao);
+	
+	printf("Deseja alterar o nome? Nome atual *%s* (sim: 1 | não: 0): ", registros[codigoContato].nome);
+	scanf("%d", &verificar);
+	 switch(verificar){
+        case 0:
+        	printf("Nome não alterado.\n");
+        	break;
+        case 1:
+        	printf("Digite o novo nome: ");
+        	scanf("%s", registros[codigoContato].nome);
+			break;
+        default:
+        	printf("Opção inválida, nome não alterado.\n");
+	}
+	
+	
+	printf("Deseja alterar o número? Número atual *%s* (sim: 1 | não: 0): ", registros[codigoContato].numero);
+	scanf("%d", &verificar);
+	 switch(verificar){
+        case 0:
+        	printf("Numero não alterado.\n");
+        	break;
+        case 1:
+        	printf("Digite o novo número: ");
+        	scanf("%s", registros[codigoContato].numero);
+			break;
+        default:
+        	printf("Opção inválida, número não alterado.\n");
+	}
+	
+	
+	printf("Deseja alterar o email? Email atual *%s* (sim: 1 | não: 0): ", registros[codigoContato].email);
+	scanf("%d", &verificar);
+	 switch(verificar){
+        case 0:
+        	printf("Email não alterado.\n");
+        	break;
+        case 1:
+        	printf("Digite o novo email: ");
+        	scanf("%s", registros[codigoContato].email);
+			break;
+        default:
+        	printf("Opção inválida, email não alterado.\n");
+	}
+	
+	tamanhoMensagem = tamanhoString(mensagemSucesso);
+	mensagem(mensagemSucesso, tamanhoMensagem);
+	
+		printf("%s", divisao);
+			printf(" %d. ", codigoContato);
+			printf("Nome: %s | ", registros[codigoContato].nome);
+			printf("Numero: %s | ", registros[codigoContato].numero);
+			printf("Email: %s ", registros[codigoContato].email);
+			printf("\n*************************************************");
+	
+	menu(registros, tamanho);
 	
 }
 
@@ -209,22 +276,7 @@ int sair(contato registros[], int tamanho){
     	sair(registros, tamanho);
 	}
 }
-void tornarDisponiveis(contato registros[], int tamanho){
-	int i;
-	for(i=0; i < tamanho; i++){
-		registros[i].disponivel = true;
-	}
-}
-int verificarItemVazio(contato registros[], int tamanho){
-	int index = NULL;
 
-	for(index = 0; index < tamanho; index++){
-		if(registros[index].disponivel){
-			return index;
-		}
-	}
-	return index;
-}
 void mensagem(char mensagem[], int tamanho){
 	int i;
 	for(i=0; i < tamanho; i++){
@@ -245,14 +297,14 @@ int tamanhoString(char mensagem[]){
 	}
 	return tamanho;
 }
-void buscaString(contato registros[],char nomeBusca[], int tamanho){
+void buscaString(contato registros[],char nomeBusca[], int tamanhoString, int tamanho){
 	int i, j, cont;
-	for(i = 0; i < MAXIMO; i++){
+	for(i = 0; i < tamanho; i++){
 		j = 0;
 		if(!registros[i].disponivel){
-			while(tolower(registros[i].nome[j]) == tolower(nomeBusca[j]) && j < tamanho ){
+			while(tolower(registros[i].nome[j]) == tolower(nomeBusca[j]) && j < tamanhoString ){
 				j++;
-				if(j == tamanho){
+				if(j == tamanhoString){
 					printf("Código: %i | Nome: %s \n", i, registros[i].nome);
 				}
 			}
