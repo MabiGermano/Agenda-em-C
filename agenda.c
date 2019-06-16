@@ -11,13 +11,13 @@ struct Scontato{
 	bool disponivel;
 }typedef contato;
 
-void novoContato(int numero, contato registros[]);
+void novoContato(int numero, contato registros[], int tamanho);
 int excluirContato(void);
 void editarContato(contato registros[]);
-void listarContatos();
-int sair(contato registros[]);
-void inicio(contato registros[]);
-int menu(contato registros[]);
+void listarContatos(contato registros[], int tamanho);
+int sair(contato registros[], int tamanho);
+void inicio(contato registros[], int tamanho);
+int menu(contato registros[], int tamanho);
 void tornarDisponiveis(contato registros[], int tamanho);
 int verificarItemVazio(contato registros[], int tamanho);
 void mensagem(char mensagem[], int tamanho);
@@ -26,12 +26,14 @@ void buscaString(contato registros[], char nomeBusca[], int tamanho);
 int main(){
     setlocale(LC_ALL, "Portuguese");
 	
-	contato registros[MAXIMO];
-	tornarDisponiveis(registros, MAXIMO);
-    inicio(registros);
+	contato *registros;
+	int tamanho = 0;
+	registros = (contato*)malloc((tamanho + 1) * sizeof(contato));
+
+    inicio(registros, tamanho);
     return 0;
 }
-void inicio(contato registros[]){
+void inicio(contato registros[], int tamanho){
 
     int opcao;
     printf(" *********  *********  *********  ***      **  ********   *********\n");
@@ -53,7 +55,7 @@ void inicio(contato registros[]){
     switch(opcao){
         case 1:
             system("cls");
-            menu(registros);
+            menu(registros, tamanho);
             break;
         case 2:
             printf("\nAté mais!!\n");
@@ -61,11 +63,11 @@ void inicio(contato registros[]){
         default:
              system("cls");
              printf("-- A OPÇÃO INSERIDA É INVÁLIDA, TENTE NOVAMENTE --\n\n");
-             inicio(registros);
+             inicio(registros, tamanho);
     }
 
 }
-int menu(contato registros[]){
+int menu(contato registros[], int tamanho){
 
     int opcao;
     
@@ -86,7 +88,7 @@ int menu(contato registros[]){
 
     switch(opcao){
         case 1:
-            novoContato(opcao, registros);
+            novoContato(opcao, registros, tamanho);
             break;
         case 2:
             excluirContato();
@@ -95,43 +97,43 @@ int menu(contato registros[]){
             editarContato(registros);
             break;
         case 4:
-            listarContatos(registros);
+            listarContatos(registros, tamanho);
             break;
         case 5:
-            sair(registros);
+            sair(registros, tamanho);
             break;
         default:
             printf("-- A OPÇÃO INSERIDA É INVÁLIDA, TENTE NOVAMENTE --\n");
-            menu(registros);
+            menu(registros, tamanho);
             break;
     }
 
 
 }
 
-void novoContato(int numero, contato registros[]){
+void novoContato(int numero, contato registros[], int tamanho){
 	char mensagemSucesso[] = " Contato Incluído com Sucesso!";
 	char mensagemInicio[] = "**********   Incluir Contato   **********";
 	int tamanhoMensagem = tamanhoString(mensagemInicio);
 	mensagem(mensagemInicio, tamanhoMensagem);	 
-	int index = verificarItemVazio(registros, MAXIMO);
 	
 	
 	printf("Digite o Nome do contato: ");
-	scanf("%s", registros[index].nome);
+	scanf("%s", registros[tamanho].nome);
 	
 	printf("Digite o Número do contato: ");
-	scanf("%s", registros[index].numero);
+	scanf("%s", registros[tamanho].numero);
 	
 	printf("Digite o email do contato: ");
-	scanf("%s", registros[index].email);
-	
-	registros[index].disponivel = false;
+	scanf("%s", registros[tamanho].email);
 	
     system("cls");
+
     tamanhoMensagem = tamanhoString(mensagemSucesso);
 	mensagem(mensagemSucesso, tamanhoMensagem);
-	menu(registros);
+	tamanho++;
+	registros = (contato*) realloc(registros, (tamanho + 1) * sizeof (contato));
+	menu(registros, tamanho);
       
 }
 
@@ -151,21 +153,20 @@ void editarContato(contato registros[]){
 	scanf("%49s", nomeBusca);
 	tamanho = tamanhoString(nomeBusca);
 	buscaString(registros, nomeBusca, tamanho);
-	menu(registros);
+	//menu(registros);
 	
 }
 
-void listarContatos(contato registros[]){
+void listarContatos(contato registros[], int tamanho){
     
     char inicio[50] = " 		Lista De Contatos 	";
     char final[50] = "*************************************************";
     int tamanhoMensagem = tamanhoString(inicio);
     contato registroTemp;
-    int index = verificarItemVazio(registros, MAXIMO);
     int i, j;
 	
 	
-	for (i=1; i < index; i++){
+	for (i=1; i < tamanho; i++){
     	registroTemp = registros[i];
     	j=i-1;
 		 
@@ -176,7 +177,7 @@ void listarContatos(contato registros[]){
    		registros[j+1] = registroTemp;
 }
 	mensagem(inicio, 49);
-	for(i=0; i < MAXIMO; i++){
+	for(i=0; i < tamanho; i++){
 		if(!registros[i].disponivel){
 			printf(" %d. ", i);
 			printf("Nome: %s | ", registros[i].nome);
@@ -187,10 +188,10 @@ void listarContatos(contato registros[]){
 	}
 	printf("%s\n", final);
 	
-	menu(registros);
+	menu(registros, tamanho);
 }
 
-int sair(contato registros[]){
+int sair(contato registros[], int tamanho){
     int opcaoSair;
 
     printf("\nDeseja sair da Agenda?\n");
@@ -202,10 +203,10 @@ int sair(contato registros[]){
     	exit(0);
 	} else if(opcaoSair == 2) {
 		system("cls");
-		menu(registros);
+		menu(registros, tamanho);
 	}else{
         printf("\n-- OPÇÃO INVÁLIDA --\n");
-    	sair(registros);
+    	sair(registros, tamanho);
 	}
 }
 void tornarDisponiveis(contato registros[], int tamanho){
