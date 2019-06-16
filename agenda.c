@@ -4,7 +4,6 @@
 #include <locale.h>
 #include <ctype.h>
 
-<<<<<<< HEAD
 struct Scontato
 {
     char nome[50];
@@ -15,17 +14,6 @@ struct Scontato
 
 void novoContato(int numero, contato registros[], int tamanho);
 int excluirContato(contato registros[], int tamanho);
-=======
-struct Scontato{
-	char nome[50];
-	char numero[20];
-	char email[50];
-	bool disponivel;
-}typedef contato;
-
-void novoContato(int numero, contato registros[], int tamanho);
-int excluirContato(void);
->>>>>>> 0dadb10004ef7ed9f549512ceaeb216f4d8bf500
 void editarContato(contato registros[], int tamanho);
 void listarContatos(contato registros[], int tamanho);
 int sair(contato registros[], int tamanho);
@@ -34,13 +22,9 @@ int menu(contato registros[], int tamanho);
 void mensagem(char mensagem[], int tamanho);
 int tamanhoString(char mensagem[]);
 void buscaString(contato registros[], char nomeBusca[], int tamanhoString, int tamanho);
-<<<<<<< HEAD
 
 int main()
 {
-=======
-int main(){
->>>>>>> 0dadb10004ef7ed9f549512ceaeb216f4d8bf500
     setlocale(LC_ALL, "Portuguese");
 
     contato *registros;
@@ -106,7 +90,6 @@ int menu(contato registros[], int tamanho)
 
     system("cls");
 
-<<<<<<< HEAD
     switch(opcao)
     {
     case 1:
@@ -128,28 +111,6 @@ int menu(contato registros[], int tamanho)
         printf("-- A OPÇÃO INSERIDA É INVÁLIDA, TENTE NOVAMENTE --\n");
         menu(registros, tamanho);
         break;
-=======
-    switch(opcao){
-        case 1:
-            novoContato(opcao, registros, tamanho);
-            break;
-        case 2:
-            excluirContato();
-            break;
-        case 3:
-            editarContato(registros, tamanho);
-            break;
-        case 4:
-            listarContatos(registros, tamanho);
-            break;
-        case 5:
-            sair(registros, tamanho);
-            break;
-        default:
-            printf("-- A OPÇÃO INSERIDA É INVÁLIDA, TENTE NOVAMENTE --\n");
-            menu(registros, tamanho);
-            break;
->>>>>>> 0dadb10004ef7ed9f549512ceaeb216f4d8bf500
     }
 
 
@@ -186,7 +147,7 @@ int excluirContato(contato registros[], int tamanho)
 {
     char mensagemInicio[] = "**********   Excluir Contato   **********";
     char divisao[] = "\n---------------------------------------------------------------------\n";
-    char final[50] = "------------------------------";
+    char final[50] = "---------------------------------------";
     int tamanhoMensagem = tamanhoString(mensagemInicio);
     char nomeBusca[50];
     int tamanhoBusca, codigoContato, verificar;
@@ -226,13 +187,15 @@ int excluirContato(contato registros[], int tamanho)
             mensagem(mensagemSucesso, tamanhoMensagem);
             break;
         default:
-            printf("Opção inválida, contato não excluído!\n");
+            system("cls");
+            printf("%s", final);
+            printf("\n Opção inválida, contato não excluído!\n");
+            printf("%s", final);
     }
 
     menu(registros, tamanho);
 }
 
-<<<<<<< HEAD
 void editarContato(contato registros[], int tamanho)
 {
     char mensagemInicio[] = "**********   Editar Contato   **********";
@@ -317,89 +280,6 @@ void editarContato(contato registros[], int tamanho)
 
     menu(registros, tamanho);
 
-=======
-void editarContato(contato registros[], int tamanho){
-	char mensagemInicio[] = "**********   Editar Contato   **********";
-	char divisao[] = "\n ---------------------------------------------------------------------\n";  
-	int tamanhoMensagem = tamanhoString(mensagemInicio);
-	char nomeBusca[50];
-	int tamanhoBusca, codigoContato, verificar;
-	char mensagemSucesso[] = "Alteração Concluída Com Sucesso!";
-	mensagem(mensagemInicio, tamanhoMensagem);	 
-	
-	printf("Digite pelo menos parte do nome do contato que deseja alterar: ");
-	scanf("%s", nomeBusca);
-	tamanhoBusca = tamanhoString(nomeBusca);
-	buscaString(registros, nomeBusca, tamanhoBusca, tamanho);
-	printf("%s", divisao);
-	printf("Digite o CÓDIGO referente a o contato que deseja alterar: ");
-	scanf("%d", &codigoContato);
-	system("cls");
-	
-			printf("%s", divisao);
-			printf(" %d. ", codigoContato);
-			printf("Nome: %s | ", registros[codigoContato].nome);
-			printf("Numero: %s | ", registros[codigoContato].numero);
-			printf("Email: %s ", registros[codigoContato].email);
-			printf("%s", divisao);
-	
-	printf("Deseja alterar o nome? Nome atual *%s* (sim: 1 | não: 0): ", registros[codigoContato].nome);
-	scanf("%d", &verificar);
-	 switch(verificar){
-        case 0:
-        	printf("Nome não alterado.\n");
-        	break;
-        case 1:
-        	printf("Digite o novo nome: ");
-        	scanf("%s", registros[codigoContato].nome);
-			break;
-        default:
-        	printf("Opção inválida, nome não alterado.\n");
-	}
-	
-	
-	printf("Deseja alterar o número? Número atual *%s* (sim: 1 | não: 0): ", registros[codigoContato].numero);
-	scanf("%d", &verificar);
-	 switch(verificar){
-        case 0:
-        	printf("Numero não alterado.\n");
-        	break;
-        case 1:
-        	printf("Digite o novo número: ");
-        	scanf("%s", registros[codigoContato].numero);
-			break;
-        default:
-        	printf("Opção inválida, número não alterado.\n");
-	}
-	
-	
-	printf("Deseja alterar o email? Email atual *%s* (sim: 1 | não: 0): ", registros[codigoContato].email);
-	scanf("%d", &verificar);
-	 switch(verificar){
-        case 0:
-        	printf("Email não alterado.\n");
-        	break;
-        case 1:
-        	printf("Digite o novo email: ");
-        	scanf("%s", registros[codigoContato].email);
-			break;
-        default:
-        	printf("Opção inválida, email não alterado.\n");
-	}
-	
-	tamanhoMensagem = tamanhoString(mensagemSucesso);
-	mensagem(mensagemSucesso, tamanhoMensagem);
-	
-		printf("%s", divisao);
-			printf(" %d. ", codigoContato);
-			printf("Nome: %s | ", registros[codigoContato].nome);
-			printf("Numero: %s | ", registros[codigoContato].numero);
-			printf("Email: %s ", registros[codigoContato].email);
-			printf("\n*************************************************");
-	
-	menu(registros, tamanho);
-	
->>>>>>> 0dadb10004ef7ed9f549512ceaeb216f4d8bf500
 }
 
 void listarContatos(contato registros[], int tamanho)
@@ -462,7 +342,6 @@ int sair(contato registros[], int tamanho)
     else
     {
         printf("\n-- OPÇÃO INVÁLIDA --\n");
-<<<<<<< HEAD
         sair(registros, tamanho);
     }
 }
@@ -481,23 +360,6 @@ void mensagem(char mensagem[], int tamanho)
         printf("-");
     }
     printf("\n");
-=======
-    	sair(registros, tamanho);
-	}
-}
-
-void mensagem(char mensagem[], int tamanho){
-	int i;
-	for(i=0; i < tamanho; i++){
-		printf("-");
-	}
-	printf("\n%s\n", mensagem);
-	
-	for(i=0; i < tamanho; i++){
-		printf("-");
-	}
-	printf("\n");
->>>>>>> 0dadb10004ef7ed9f549512ceaeb216f4d8bf500
 }
 int tamanhoString(char mensagem[])
 {
@@ -509,7 +371,6 @@ int tamanhoString(char mensagem[])
     }
     return tamanho;
 }
-<<<<<<< HEAD
 void buscaString(contato registros[],char nomeBusca[], int tamanhoString, int tamanho)
 {
     int i, j, cont;
@@ -528,21 +389,5 @@ void buscaString(contato registros[],char nomeBusca[], int tamanhoString, int ta
             }
         }
     }
-=======
-void buscaString(contato registros[],char nomeBusca[], int tamanhoString, int tamanho){
-	int i, j, cont;
-	for(i = 0; i < tamanho; i++){
-		j = 0;
-		if(!registros[i].disponivel){
-			while(tolower(registros[i].nome[j]) == tolower(nomeBusca[j]) && j < tamanhoString ){
-				j++;
-				if(j == tamanhoString){
-					printf("Código: %i | Nome: %s \n", i, registros[i].nome);
-				}
-			}
-		}
-	}
->>>>>>> 0dadb10004ef7ed9f549512ceaeb216f4d8bf500
 }
-
 
