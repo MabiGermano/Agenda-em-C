@@ -24,16 +24,24 @@ printf("Digite o nome: ");
   lista = (contato*) realloc(lista, (tamanho + 1) * sizeof (contato));
 
 }
-  
-printf("%i\n", tamanho);
+  	FILE *arqagenda = fopen("agenda.dat", "wb+");
+	fwrite (&tamanho, sizeof(contato), 1, arqagenda);
+	fwrite (lista, sizeof(contato), tamanho, arqagenda);
+	fclose(arqagenda);
+	
+	arqagenda = fopen("agenda.dat", "wb+");
+  if (arqagenda == NULL)
+  {
+     printf("Problemas na abertura do arquivo\n");
+     return;
+  }
+  	int result = fread (&tamanho, sizeof(contato), 1, arqagenda);
+  	result = fread (lista, sizeof(contato), tamanho, arqagenda);
 
-for(int i = 0; i < tamanho+1; i++){
-  printf("%s\n",lista[i].nome);
-}
-
-
-
-
-
+  	fclose(arqagenda);
+  	int i;
+  	for(i = 0; i < tamanho; i++){
+  		printf("%d - %s\n",i, lista[i].nome);
+	  }
   return 0;
 }
