@@ -58,7 +58,7 @@ void inicio(contato registros[], int tamanho)
     printf(" **     **  **     **  **         **    ** **  **     **  **     **\n");
     printf(" **     **  *********  *********  **     ****  *********  **     **\n");
     printf(" **     **  *********  *********  **      ***  ********   **     **\n\n");
-
+    
 
     printf("Olá, sou sua agenda. Escolha uma dessas opções para continuar(ou não haha): \n\n");
     printf("1 - Menu / 2 - Encerrar\n");
