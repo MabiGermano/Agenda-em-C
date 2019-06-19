@@ -100,8 +100,7 @@ int menu(contato registros[], int tamanho)
     printf("2 - Excluir Contato\n");
     printf("3 - Editar Contato\n");
     printf("4 - Listar Contatos\n");
-    printf("5 - backup\n");
-    printf("6 - Sair\n");
+    printf("5 - Sair\n");
     printf("\nDigite a opção desejada: ");
     scanf("%i", &opcao);
 
@@ -122,11 +121,8 @@ int menu(contato registros[], int tamanho)
         listarContatos(registros, tamanho);
         break;
     case 5:
-        backup(registros, tamanho);
+        sair(registros, tamanho);
         break;
-    case 6:
-	    sair(registros, tamanho);
-	    break;
     default:
         printf("-- A OPÇÃO INSERIDA É INVÁLIDA, TENTE NOVAMENTE --\n");
         menu(registros, tamanho);
@@ -237,12 +233,13 @@ void editarContato(contato registros[], int tamanho)
     printf("Digite o CÓDIGO referente a o contato que deseja alterar: ");
     scanf("%d", &codigoContato);
     system("cls");
+    
     if(registros[codigoContato].indisponivel){
     	
-    	printf("*** Contato inexistente ou excluído previamente. ***\n");
-		printf("*** TENTE NOVAMENTE ***\n");
+    	printf("\n *** Contato inexistente ou excluído previamente. ***\n");
+		printf(" *** TENTE NOVAMENTE ***\n");
 		    	
-    	editarContato(registros,tamanho);
+    	listarContatos(registros,tamanho);
 	}
 
     printf("%s", divisao);
