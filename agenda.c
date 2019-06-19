@@ -32,23 +32,27 @@ int main()
     int tamanho = 0;
 	registros = (contato*)malloc((tamanho + 1) * sizeof(contato));
 	
-	FILE *arqagenda = fopen("agenda.dat", "wb+");
+	FILE *arqagenda = fopen("agenda.dat", "rb");
 	  if (arqagenda == NULL){
-	     
-	     return;
+	     fclose(arqagenda);
+	     arqagenda = fopen("agenda.dat", "wb+");
+	     fclose(arqagenda);
+	     arqagenda = fopen("agenda.dat", "rb");
 	  }
-  	int result = fread(&tamanho, sizeof(contato), 1, arqagenda);
-  	result = fread(&registros[0], sizeof(contato), 2, arqagenda);
+	  int result = 0;
+	  	while(!feof(arqagenda)){
+			result += fread(&registros[result], sizeof(contato),1,arqagenda);
+			registros = (contato*) realloc(registros, (result+1) * sizeof (contato));	
+		  }
+		  
   	fclose(arqagenda);
-  	
-	printf("%d\n\n\n", tamanho);
-	
+	tamanho = result;
     inicio(registros, tamanho);
     return 0;
 }
 void inicio(contato registros[], int tamanho)
 {
-
+	
     int opcao;
     printf(" *********  *********  *********  ***      **  ********   *********\n");
     printf(" *********  *********  *********  ****     **  *********  *********\n");
@@ -58,7 +62,7 @@ void inicio(contato registros[], int tamanho)
     printf(" **     **  **     **  **         **    ** **  **     **  **     **\n");
     printf(" **     **  *********  *********  **     ****  *********  **     **\n");
     printf(" **     **  *********  *********  **      ***  ********   **     **\n\n");
-    
+
 
     printf("Olá, sou sua agenda. Escolha uma dessas opções para continuar(ou não haha): \n\n");
     printf("1 - Menu / 2 - Encerrar\n");
@@ -139,7 +143,6 @@ void novoContato(int numero, contato registros[], int tamanho)
     int tamanhoMensagem = tamanhoString(mensagemInicio);
     mensagem(mensagemInicio, tamanhoMensagem);
 
-
     printf("Digite o Nome do contato: ");
     scanf("%s", registros[tamanho].nome);
 
@@ -154,8 +157,10 @@ void novoContato(int numero, contato registros[], int tamanho)
 
     tamanhoMensagem = tamanhoString(mensagemSucesso);
     mensagem(mensagemSucesso, tamanhoMensagem);
+    
     tamanho++;
     registros = (contato*) realloc(registros, (tamanho + 1) * sizeof (contato));
+    backup(registros, tamanho);
     menu(registros, tamanho);
 
 }
@@ -199,6 +204,7 @@ int excluirContato(contato registros[], int tamanho){
             break;
         case 1:
             registros[codigoContato].indisponivel = true;
+            backup(registros, tamanho);
             system("cls");
             tamanhoMensagem = tamanhoString(mensagemSucesso);
             mensagem(mensagemSucesso, tamanhoMensagem);
@@ -231,6 +237,13 @@ void editarContato(contato registros[], int tamanho)
     printf("Digite o CÓDIGO referente a o contato que deseja alterar: ");
     scanf("%d", &codigoContato);
     system("cls");
+    if(registros[codigoContato].indisponivel){
+    	
+    	printf("*** Contato inexistente ou excluído previamente. ***\n");
+		printf("*** TENTE NOVAMENTE ***\n");
+		    	
+    	editarContato(registros,tamanho);
+	}
 
     printf("%s", divisao);
     printf(" %d. ", codigoContato);
@@ -294,14 +307,15 @@ void editarContato(contato registros[], int tamanho)
     printf("Numero: %s | ", registros[codigoContato].numero);
     printf("Email: %s ", registros[codigoContato].email);
     printf("\n*************************************************");
-
+	
+	backup(registros, tamanho);
     menu(registros, tamanho);
 
 }
 
 void listarContatos(contato registros[], int tamanho)
 {
-
+	
     char inicio[50] = " 		Lista De Contatos 	";
     char final[50] = "*************************************************";
     int tamanhoMensagem = tamanhoString(inicio);
@@ -324,8 +338,7 @@ void listarContatos(contato registros[], int tamanho)
     mensagem(inicio, 49);
     for(i=0; i < tamanho; i++)
     {
-        if(!registros[i].indisponivel)
-        {
+        if(!registros[i].indisponivel){
             printf(" %d. ", i);
             printf("Nome: %s | ", registros[i].nome);
             printf("Numero: %s | ", registros[i].numero);
@@ -410,12 +423,11 @@ void buscaString(contato registros[],char nomeBusca[], int tamanhoString, int ta
 
 void backup(contato registros[], int tamanho){
 	FILE *arqagenda = fopen("agenda.dat", "wb+");
-	int result = fwrite (&tamanho, sizeof(contato), 1, arqagenda);
-	result = fwrite (&registros[0], sizeof(contato), tamanho, arqagenda);
+	int result = fwrite (&registros[0], sizeof(contato), tamanho, arqagenda);
 	
 	fclose(arqagenda);
 	
-	printf("%d", result);
+	menu(registros, tamanho);
 	
 }
 
